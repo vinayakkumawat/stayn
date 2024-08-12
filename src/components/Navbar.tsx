@@ -1,14 +1,8 @@
-"use client"
-
 import { IconSmartHome } from "@tabler/icons-react";
 import React from "react";
 import { Button } from "./ui/button";
-import { signOut, signIn } from "next-auth/react"
-import { auth } from "@/lib/auth"
 
 const Navbar = async () => {
-
-    const session = await auth()
 
     return (
         <nav className="w-full px-8 py-2 flex justify-between items-center bg-background border border-neutral-600 rounded-full">
@@ -17,12 +11,7 @@ const Navbar = async () => {
             </div>
             <div className="flex gap-2">
                 <Button variant={'link'}>About</Button>
-                <Button variant={'link'}>Contact</Button>
-                {session ? (
-                    <Button onClick={() => signOut()} variant={'default'}>Sign Out</Button>
-                    ) : (
-                        <Button onClick={() => signIn()} variant={'default'}>Sign In</Button>
-                    )}                
+                <Button variant={'link'}>Contact</Button>             
             </div>
         </nav>
     )
