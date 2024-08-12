@@ -124,11 +124,11 @@ const SearchForm = () => {
                                             {field.value?.from ? (
                                                 field.value?.to ? (
                                                     <>
-                                                        {format(field.value?.from, "LLL dd, y")} -{" "}
-                                                        {format(field.value?.to, "LLL dd, y")}
+                                                        {format(field.value?.from, "LLL dd")} -{" "}
+                                                        {format(field.value?.to, "LLL dd")}
                                                     </>
                                                 ) : (
-                                                    format(field.value?.from, "LLL dd, y")
+                                                    format(field.value?.from, "LLL dd")
                                                 )
                                             ) : (
                                                 <span>Select</span>
