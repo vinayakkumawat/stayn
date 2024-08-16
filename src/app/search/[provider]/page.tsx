@@ -1,34 +1,58 @@
 import React from 'react'
 import { notFound } from 'next/navigation';
 import { fetchResults } from '../../../lib/fetchResults';
+import SearchResults from '@/components/SearchResults';
+import { SearchResultProps } from '@/lib/searchResultsType'
 
 interface SearchParams {
-    url: URL;
-    group_adults: string;
-    group_children: string;
-    no_rooms: string;
+    location: string;
+    adults: string;
+    children: string;
     checkin: string;
     checkout: string;
+    minBedrooms: string;
     keywords: string;
 }
 
-interface Props {
-    searchParams: SearchParams
+interface UrlProps {
+    params: {
+        provider: string;
+    };
+    searchParams: SearchParams;
 }
 
-const searchResults = async ({ searchParams }: Props) => {
+const providers = ["airbnb"];
 
-    if(!searchParams.url) return notFound()
+const searchResults = async ({ params, searchParams }: UrlProps) => {
 
-    const results = await fetchResults(searchParams)
+    const isProvider = providers.includes(params.provider);
 
-    if (!results) return <div>No results...</div>;
+    if (!isProvider) {
+        return notFound();
+    }
 
+    // console.log(searchParams);
+
+    const data = {
+        location: searchParams?.location,
+        checkin: searchParams?.checkin,
+        checkout: searchParams?.checkout,
+        adults: searchParams?.adults,
+        children: searchParams?.children,
+        minBedrooms: searchParams?.minBedrooms,
+        keywords: searchParams?.keywords
+    }
+
+    // console.log(data);
+
+    // Use the results to render the search results
+    const results = await fetchResults(data);
     return (
-        <div>searchResults</div>
+        <div className='container'>
+            <SearchResults results={results} />
+        </div>
+    );
 
-
-    )
 }
 
 export default searchResults

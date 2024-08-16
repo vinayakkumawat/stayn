@@ -15,7 +15,6 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { useRouter } from 'next/navigation'
 
 import { format } from "date-fns"
 import { Calendar as CalendarIcon } from "lucide-react"
@@ -27,6 +26,20 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover"
 import { IconSearch } from '@tabler/icons-react'
+import { fetchResults } from '@/lib/fetchResults'
+import { redirect } from 'next/navigation'
+
+interface Data {
+    location: string;
+    dates: {
+        from: string;
+        to: string;
+    }
+    adults: string;
+    children: string;
+    rooms: string;
+    keywords: string;
+}
 
 const searchSchema = z.object({
     location: z.string().min(2).max(50),
@@ -41,8 +54,6 @@ const searchSchema = z.object({
 })
 
 const SearchForm = () => {
-
-    const router = useRouter()
 
     const search = useForm<z.infer<typeof searchSchema>>({
         resolver: zodResolver(searchSchema),
@@ -60,7 +71,8 @@ const SearchForm = () => {
     })
 
     function onSubmit(values: z.infer<typeof searchSchema>) {
-        console.log(values)
+
+        // console.log(values)
 
         const checkin_monthday = values.dates.from.getDate().toString();
         const checkin_month = (values.dates.from.getMonth() + 1).toString();
@@ -69,19 +81,19 @@ const SearchForm = () => {
         const checkout_month = (values.dates.to.getMonth() + 1).toString();
         const checkout_year = values.dates.to.getFullYear().toString();
 
-        const checkin = `${checkin_year}-${checkin_month}-${checkin_monthday}`;
-        const checkout = `${checkout_year}-${checkout_month}-${checkout_monthday}`;
+        const checkin = `${checkin_year}-${checkin_month.padStart(2, '0')}-${checkin_monthday.padStart(2, '0')}`;
+        const checkout = `${checkout_year}-${checkout_month.padStart(2, '0')}-${checkout_monthday.padStart(2, '0')}`;
 
-        // const url = new URL("https://www.booking.com/searchresults.html");
-        // url.searchParams.set("ss", values.location);
-        // url.searchParams.set("group_adults", values.adults);
-        // url.searchParams.set("group_children", values.children);
-        // url.searchParams.set("no_rooms", values.rooms);
-        // url.searchParams.set("checkin", checkin);
-        // url.searchParams.set("checkout", checkout);
-        // url.searchParams.set("keywords", values.keywords);
+        const url = new URL(`${process.env.NEXT_PUBLIC_ROOT_URL}/search/airbnb`);
+        url.searchParams.set("location", values.location);
+        url.searchParams.set("adults", values.adults);
+        url.searchParams.set("children", values.children);
+        url.searchParams.set("checkin", checkin);
+        url.searchParams.set("checkout", checkout);
+        url.searchParams.set("minBedrooms", values.rooms);
+        url.searchParams.set("keywords", values.keywords);
 
-        // router.push(`/search/airbnb?url=${url.href}`);
+        window.location.href = url.toString();
     }
 
     return (

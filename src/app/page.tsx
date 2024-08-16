@@ -2,16 +2,8 @@ import { Button } from "@/components/ui/button";
 import { FlipWords } from "@/components/ui/flip-words";
 import { IconArrowNarrowRight } from "@tabler/icons-react";
 import Link from "next/link";
-import { signIn, auth } from "@/lib/auth"
-import { redirect } from "next/navigation";
 
 export default async function Home() {
-
-  const session = await auth()
-
-  if (session) {
-    redirect("/search")
-  }
 
   const words = ["Perfect", "Best", "Dream", "Ideal"];
 
@@ -24,12 +16,7 @@ export default async function Home() {
             <Button variant={'link'}>About</Button>
             <Button variant={'link'}>Contact</Button>
           </div>
-          <form
-            action={async () => {
-              "use server"
-              await signIn("google", { redirectTo: "/search" })
-            }}
-          >
+          <form>
             <Button type="submit">Sign in</Button>
           </form>
         </div>
